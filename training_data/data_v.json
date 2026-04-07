@@ -1,0 +1,1730 @@
+[
+    {
+        "reported_at" : "2024-07-15",
+        "close" : 268.45
+    },
+    {
+        "reported_at" : "2024-07-16",
+        "close" : 269.25
+    },
+    {
+        "reported_at" : "2024-07-17",
+        "close" : 272.7
+    },
+    {
+        "reported_at" : "2024-07-18",
+        "close" : 269.15
+    },
+    {
+        "reported_at" : "2024-07-19",
+        "close" : 265.46
+    },
+    {
+        "reported_at" : "2024-07-22",
+        "close" : 267.71
+    },
+    {
+        "reported_at" : "2024-07-23",
+        "close" : 264.79
+    },
+    {
+        "reported_at" : "2024-07-24",
+        "close" : 254.17
+    },
+    {
+        "reported_at" : "2024-07-25",
+        "close" : 253.74
+    },
+    {
+        "reported_at" : "2024-07-26",
+        "close" : 259.46
+    },
+    {
+        "reported_at" : "2024-07-29",
+        "close" : 261.6
+    },
+    {
+        "reported_at" : "2024-07-30",
+        "close" : 263.1
+    },
+    {
+        "reported_at" : "2024-07-31",
+        "close" : 265.67
+    },
+    {
+        "reported_at" : "2024-08-01",
+        "close" : 265.93
+    },
+    {
+        "reported_at" : "2024-08-02",
+        "close" : 266.58
+    },
+    {
+        "reported_at" : "2024-08-05",
+        "close" : 256.44
+    },
+    {
+        "reported_at" : "2024-08-06",
+        "close" : 258.26
+    },
+    {
+        "reported_at" : "2024-08-07",
+        "close" : 256.52
+    },
+    {
+        "reported_at" : "2024-08-08",
+        "close" : 259.83
+    },
+    {
+        "reported_at" : "2024-08-09",
+        "close" : 259.76
+    },
+    {
+        "reported_at" : "2024-08-12",
+        "close" : 259.89
+    },
+    {
+        "reported_at" : "2024-08-13",
+        "close" : 260.13
+    },
+    {
+        "reported_at" : "2024-08-14",
+        "close" : 261.14
+    },
+    {
+        "reported_at" : "2024-08-15",
+        "close" : 266.8
+    },
+    {
+        "reported_at" : "2024-08-16",
+        "close" : 267.38
+    },
+    {
+        "reported_at" : "2024-08-19",
+        "close" : 266.47
+    },
+    {
+        "reported_at" : "2024-08-20",
+        "close" : 268.04
+    },
+    {
+        "reported_at" : "2024-08-21",
+        "close" : 268.2
+    },
+    {
+        "reported_at" : "2024-08-22",
+        "close" : 267.94
+    },
+    {
+        "reported_at" : "2024-08-23",
+        "close" : 267.44
+    },
+    {
+        "reported_at" : "2024-08-26",
+        "close" : 268.21
+    },
+    {
+        "reported_at" : "2024-08-27",
+        "close" : 270.72
+    },
+    {
+        "reported_at" : "2024-08-28",
+        "close" : 269.19
+    },
+    {
+        "reported_at" : "2024-08-29",
+        "close" : 274.32
+    },
+    {
+        "reported_at" : "2024-08-30",
+        "close" : 276.37
+    },
+    {
+        "reported_at" : "2024-09-03",
+        "close" : 278.54
+    },
+    {
+        "reported_at" : "2024-09-04",
+        "close" : 280.49
+    },
+    {
+        "reported_at" : "2024-09-05",
+        "close" : 278.62
+    },
+    {
+        "reported_at" : "2024-09-06",
+        "close" : 279.37
+    },
+    {
+        "reported_at" : "2024-09-09",
+        "close" : 285.61
+    },
+    {
+        "reported_at" : "2024-09-10",
+        "close" : 285.34
+    },
+    {
+        "reported_at" : "2024-09-11",
+        "close" : 283.96
+    },
+    {
+        "reported_at" : "2024-09-12",
+        "close" : 285.37
+    },
+    {
+        "reported_at" : "2024-09-13",
+        "close" : 287.35
+    },
+    {
+        "reported_at" : "2024-09-16",
+        "close" : 290.48
+    },
+    {
+        "reported_at" : "2024-09-17",
+        "close" : 291.56
+    },
+    {
+        "reported_at" : "2024-09-18",
+        "close" : 288.48
+    },
+    {
+        "reported_at" : "2024-09-19",
+        "close" : 285.24
+    },
+    {
+        "reported_at" : "2024-09-20",
+        "close" : 284.77
+    },
+    {
+        "reported_at" : "2024-09-23",
+        "close" : 288.63
+    },
+    {
+        "reported_at" : "2024-09-24",
+        "close" : 272.78
+    },
+    {
+        "reported_at" : "2024-09-25",
+        "close" : 269.63
+    },
+    {
+        "reported_at" : "2024-09-26",
+        "close" : 271.69
+    },
+    {
+        "reported_at" : "2024-09-27",
+        "close" : 275.17
+    },
+    {
+        "reported_at" : "2024-09-30",
+        "close" : 274.95
+    },
+    {
+        "reported_at" : "2024-10-01",
+        "close" : 277.6
+    },
+    {
+        "reported_at" : "2024-10-02",
+        "close" : 277
+    },
+    {
+        "reported_at" : "2024-10-03",
+        "close" : 276.86
+    },
+    {
+        "reported_at" : "2024-10-04",
+        "close" : 277.93
+    },
+    {
+        "reported_at" : "2024-10-07",
+        "close" : 273.79
+    },
+    {
+        "reported_at" : "2024-10-08",
+        "close" : 274.96
+    },
+    {
+        "reported_at" : "2024-10-09",
+        "close" : 276.93
+    },
+    {
+        "reported_at" : "2024-10-10",
+        "close" : 277.47
+    },
+    {
+        "reported_at" : "2024-10-11",
+        "close" : 277.84
+    },
+    {
+        "reported_at" : "2024-10-14",
+        "close" : 280.68
+    },
+    {
+        "reported_at" : "2024-10-15",
+        "close" : 279.29
+    },
+    {
+        "reported_at" : "2024-10-16",
+        "close" : 287.52
+    },
+    {
+        "reported_at" : "2024-10-17",
+        "close" : 290.39
+    },
+    {
+        "reported_at" : "2024-10-18",
+        "close" : 290.62
+    },
+    {
+        "reported_at" : "2024-10-21",
+        "close" : 286.85
+    },
+    {
+        "reported_at" : "2024-10-22",
+        "close" : 284.79
+    },
+    {
+        "reported_at" : "2024-10-23",
+        "close" : 283.76
+    },
+    {
+        "reported_at" : "2024-10-24",
+        "close" : 283.22
+    },
+    {
+        "reported_at" : "2024-10-25",
+        "close" : 281.73
+    },
+    {
+        "reported_at" : "2024-10-28",
+        "close" : 284.19
+    },
+    {
+        "reported_at" : "2024-10-29",
+        "close" : 281.88
+    },
+    {
+        "reported_at" : "2024-10-30",
+        "close" : 290.16
+    },
+    {
+        "reported_at" : "2024-10-31",
+        "close" : 289.85
+    },
+    {
+        "reported_at" : "2024-11-01",
+        "close" : 290.74
+    },
+    {
+        "reported_at" : "2024-11-04",
+        "close" : 291.85
+    },
+    {
+        "reported_at" : "2024-11-05",
+        "close" : 293.29
+    },
+    {
+        "reported_at" : "2024-11-06",
+        "close" : 307.4
+    },
+    {
+        "reported_at" : "2024-11-07",
+        "close" : 305.8
+    },
+    {
+        "reported_at" : "2024-11-08",
+        "close" : 307.87
+    },
+    {
+        "reported_at" : "2024-11-11",
+        "close" : 310.92
+    },
+    {
+        "reported_at" : "2024-11-12",
+        "close" : 309.85
+    },
+    {
+        "reported_at" : "2024-11-13",
+        "close" : 309.48
+    },
+    {
+        "reported_at" : "2024-11-14",
+        "close" : 308.25
+    },
+    {
+        "reported_at" : "2024-11-15",
+        "close" : 309.64
+    },
+    {
+        "reported_at" : "2024-11-18",
+        "close" : 312.16
+    },
+    {
+        "reported_at" : "2024-11-19",
+        "close" : 311.85
+    },
+    {
+        "reported_at" : "2024-11-20",
+        "close" : 307.39
+    },
+    {
+        "reported_at" : "2024-11-21",
+        "close" : 309.9
+    },
+    {
+        "reported_at" : "2024-11-22",
+        "close" : 309.92
+    },
+    {
+        "reported_at" : "2024-11-25",
+        "close" : 313.19
+    },
+    {
+        "reported_at" : "2024-11-26",
+        "close" : 311.82
+    },
+    {
+        "reported_at" : "2024-11-27",
+        "close" : 314.7
+    },
+    {
+        "reported_at" : "2024-11-29",
+        "close" : 315.08
+    },
+    {
+        "reported_at" : "2024-12-02",
+        "close" : 316.65
+    },
+    {
+        "reported_at" : "2024-12-03",
+        "close" : 313.01
+    },
+    {
+        "reported_at" : "2024-12-04",
+        "close" : 309.9
+    },
+    {
+        "reported_at" : "2024-12-05",
+        "close" : 309.08
+    },
+    {
+        "reported_at" : "2024-12-06",
+        "close" : 311.01
+    },
+    {
+        "reported_at" : "2024-12-09",
+        "close" : 308.3
+    },
+    {
+        "reported_at" : "2024-12-10",
+        "close" : 312.38
+    },
+    {
+        "reported_at" : "2024-12-11",
+        "close" : 313.79
+    },
+    {
+        "reported_at" : "2024-12-12",
+        "close" : 314.23
+    },
+    {
+        "reported_at" : "2024-12-13",
+        "close" : 314.74
+    },
+    {
+        "reported_at" : "2024-12-16",
+        "close" : 315.89
+    },
+    {
+        "reported_at" : "2024-12-17",
+        "close" : 318.3
+    },
+    {
+        "reported_at" : "2024-12-18",
+        "close" : 309.78
+    },
+    {
+        "reported_at" : "2024-12-19",
+        "close" : 314.88
+    },
+    {
+        "reported_at" : "2024-12-20",
+        "close" : 317.71
+    },
+    {
+        "reported_at" : "2024-12-23",
+        "close" : 317.22
+    },
+    {
+        "reported_at" : "2024-12-24",
+        "close" : 320.65
+    },
+    {
+        "reported_at" : "2024-12-26",
+        "close" : 320.91
+    },
+    {
+        "reported_at" : "2024-12-27",
+        "close" : 318.66
+    },
+    {
+        "reported_at" : "2024-12-30",
+        "close" : 315.31
+    },
+    {
+        "reported_at" : "2024-12-31",
+        "close" : 316.04
+    },
+    {
+        "reported_at" : "2025-01-02",
+        "close" : 314.4
+    },
+    {
+        "reported_at" : "2025-01-03",
+        "close" : 314.91
+    },
+    {
+        "reported_at" : "2025-01-06",
+        "close" : 313.04
+    },
+    {
+        "reported_at" : "2025-01-07",
+        "close" : 311.67
+    },
+    {
+        "reported_at" : "2025-01-08",
+        "close" : 312.6
+    },
+    {
+        "reported_at" : "2025-01-10",
+        "close" : 307.71
+    },
+    {
+        "reported_at" : "2025-01-13",
+        "close" : 306.92
+    },
+    {
+        "reported_at" : "2025-01-14",
+        "close" : 309.09
+    },
+    {
+        "reported_at" : "2025-01-15",
+        "close" : 316.28
+    },
+    {
+        "reported_at" : "2025-01-16",
+        "close" : 317.25
+    },
+    {
+        "reported_at" : "2025-01-17",
+        "close" : 319.62
+    },
+    {
+        "reported_at" : "2025-01-21",
+        "close" : 323.63
+    },
+    {
+        "reported_at" : "2025-01-22",
+        "close" : 323.56
+    },
+    {
+        "reported_at" : "2025-01-23",
+        "close" : 328.21
+    },
+    {
+        "reported_at" : "2025-01-24",
+        "close" : 330.2
+    },
+    {
+        "reported_at" : "2025-01-27",
+        "close" : 334.54
+    },
+    {
+        "reported_at" : "2025-01-28",
+        "close" : 334.48
+    },
+    {
+        "reported_at" : "2025-01-29",
+        "close" : 335.88
+    },
+    {
+        "reported_at" : "2025-01-30",
+        "close" : 343.05
+    },
+    {
+        "reported_at" : "2025-01-31",
+        "close" : 341.8
+    },
+    {
+        "reported_at" : "2025-02-03",
+        "close" : 345.82
+    },
+    {
+        "reported_at" : "2025-02-04",
+        "close" : 345.15
+    },
+    {
+        "reported_at" : "2025-02-05",
+        "close" : 349.44
+    },
+    {
+        "reported_at" : "2025-02-06",
+        "close" : 347.48
+    },
+    {
+        "reported_at" : "2025-02-07",
+        "close" : 348.02
+    },
+    {
+        "reported_at" : "2025-02-10",
+        "close" : 351.23
+    },
+    {
+        "reported_at" : "2025-02-11",
+        "close" : 350.72
+    },
+    {
+        "reported_at" : "2025-02-12",
+        "close" : 351.49
+    },
+    {
+        "reported_at" : "2025-02-13",
+        "close" : 355.63
+    },
+    {
+        "reported_at" : "2025-02-14",
+        "close" : 353.81
+    },
+    {
+        "reported_at" : "2025-02-18",
+        "close" : 356.73
+    },
+    {
+        "reported_at" : "2025-02-19",
+        "close" : 355.23
+    },
+    {
+        "reported_at" : "2025-02-20",
+        "close" : 350.49
+    },
+    {
+        "reported_at" : "2025-02-21",
+        "close" : 348.53
+    },
+    {
+        "reported_at" : "2025-02-24",
+        "close" : 349.86
+    },
+    {
+        "reported_at" : "2025-02-25",
+        "close" : 352.09
+    },
+    {
+        "reported_at" : "2025-02-26",
+        "close" : 350.63
+    },
+    {
+        "reported_at" : "2025-02-27",
+        "close" : 355.74
+    },
+    {
+        "reported_at" : "2025-02-28",
+        "close" : 362.71
+    },
+    {
+        "reported_at" : "2025-03-03",
+        "close" : 361.82
+    },
+    {
+        "reported_at" : "2025-03-04",
+        "close" : 352.23
+    },
+    {
+        "reported_at" : "2025-03-05",
+        "close" : 352.68
+    },
+    {
+        "reported_at" : "2025-03-06",
+        "close" : 344.16
+    },
+    {
+        "reported_at" : "2025-03-07",
+        "close" : 345.32
+    },
+    {
+        "reported_at" : "2025-03-10",
+        "close" : 341.48
+    },
+    {
+        "reported_at" : "2025-03-11",
+        "close" : 332.14
+    },
+    {
+        "reported_at" : "2025-03-12",
+        "close" : 332.84
+    },
+    {
+        "reported_at" : "2025-03-13",
+        "close" : 328.55
+    },
+    {
+        "reported_at" : "2025-03-14",
+        "close" : 331.8
+    },
+    {
+        "reported_at" : "2025-03-17",
+        "close" : 334.55
+    },
+    {
+        "reported_at" : "2025-03-18",
+        "close" : 334.77
+    },
+    {
+        "reported_at" : "2025-03-19",
+        "close" : 339.87
+    },
+    {
+        "reported_at" : "2025-03-20",
+        "close" : 339.5
+    },
+    {
+        "reported_at" : "2025-03-21",
+        "close" : 335.66
+    },
+    {
+        "reported_at" : "2025-03-24",
+        "close" : 343.87
+    },
+    {
+        "reported_at" : "2025-03-25",
+        "close" : 344.62
+    },
+    {
+        "reported_at" : "2025-03-26",
+        "close" : 344.18
+    },
+    {
+        "reported_at" : "2025-03-27",
+        "close" : 349.86
+    },
+    {
+        "reported_at" : "2025-03-28",
+        "close" : 342.85
+    },
+    {
+        "reported_at" : "2025-03-31",
+        "close" : 350.46
+    },
+    {
+        "reported_at" : "2025-04-01",
+        "close" : 346.35
+    },
+    {
+        "reported_at" : "2025-04-02",
+        "close" : 346.33
+    },
+    {
+        "reported_at" : "2025-04-03",
+        "close" : 339.39
+    },
+    {
+        "reported_at" : "2025-04-04",
+        "close" : 313.13
+    },
+    {
+        "reported_at" : "2025-04-07",
+        "close" : 312.32
+    },
+    {
+        "reported_at" : "2025-04-08",
+        "close" : 308.27
+    },
+    {
+        "reported_at" : "2025-04-09",
+        "close" : 332.43
+    },
+    {
+        "reported_at" : "2025-04-10",
+        "close" : 324.61
+    },
+    {
+        "reported_at" : "2025-04-11",
+        "close" : 333.4
+    },
+    {
+        "reported_at" : "2025-04-14",
+        "close" : 335.18
+    },
+    {
+        "reported_at" : "2025-04-15",
+        "close" : 335.81
+    },
+    {
+        "reported_at" : "2025-04-16",
+        "close" : 331.33
+    },
+    {
+        "reported_at" : "2025-04-17",
+        "close" : 329.61
+    },
+    {
+        "reported_at" : "2025-04-21",
+        "close" : 320.1
+    },
+    {
+        "reported_at" : "2025-04-22",
+        "close" : 331.4
+    },
+    {
+        "reported_at" : "2025-04-23",
+        "close" : 334.37
+    },
+    {
+        "reported_at" : "2025-04-24",
+        "close" : 335.71
+    },
+    {
+        "reported_at" : "2025-04-25",
+        "close" : 335.17
+    },
+    {
+        "reported_at" : "2025-04-28",
+        "close" : 337.51
+    },
+    {
+        "reported_at" : "2025-04-29",
+        "close" : 341.52
+    },
+    {
+        "reported_at" : "2025-04-30",
+        "close" : 345.5
+    },
+    {
+        "reported_at" : "2025-05-01",
+        "close" : 342.45
+    },
+    {
+        "reported_at" : "2025-05-02",
+        "close" : 347.6
+    },
+    {
+        "reported_at" : "2025-05-05",
+        "close" : 348.64
+    },
+    {
+        "reported_at" : "2025-05-06",
+        "close" : 347.7
+    },
+    {
+        "reported_at" : "2025-05-07",
+        "close" : 349.85
+    },
+    {
+        "reported_at" : "2025-05-08",
+        "close" : 351.27
+    },
+    {
+        "reported_at" : "2025-05-09",
+        "close" : 352.54
+    },
+    {
+        "reported_at" : "2025-05-12",
+        "close" : 355.85
+    },
+    {
+        "reported_at" : "2025-05-13",
+        "close" : 356.14
+    },
+    {
+        "reported_at" : "2025-05-14",
+        "close" : 356.46
+    },
+    {
+        "reported_at" : "2025-05-15",
+        "close" : 362.3
+    },
+    {
+        "reported_at" : "2025-05-16",
+        "close" : 365.12
+    },
+    {
+        "reported_at" : "2025-05-19",
+        "close" : 367.9
+    },
+    {
+        "reported_at" : "2025-05-20",
+        "close" : 366.84
+    },
+    {
+        "reported_at" : "2025-05-21",
+        "close" : 358.3
+    },
+    {
+        "reported_at" : "2025-05-22",
+        "close" : 357.97
+    },
+    {
+        "reported_at" : "2025-05-23",
+        "close" : 353.54
+    },
+    {
+        "reported_at" : "2025-05-27",
+        "close" : 359.3
+    },
+    {
+        "reported_at" : "2025-05-28",
+        "close" : 359.73
+    },
+    {
+        "reported_at" : "2025-05-29",
+        "close" : 362.4
+    },
+    {
+        "reported_at" : "2025-05-30",
+        "close" : 365.19
+    },
+    {
+        "reported_at" : "2025-06-02",
+        "close" : 365.32
+    },
+    {
+        "reported_at" : "2025-06-03",
+        "close" : 365.86
+    },
+    {
+        "reported_at" : "2025-06-04",
+        "close" : 368
+    },
+    {
+        "reported_at" : "2025-06-05",
+        "close" : 366.77
+    },
+    {
+        "reported_at" : "2025-06-06",
+        "close" : 370.22
+    },
+    {
+        "reported_at" : "2025-06-09",
+        "close" : 366.66
+    },
+    {
+        "reported_at" : "2025-06-10",
+        "close" : 370.7
+    },
+    {
+        "reported_at" : "2025-06-11",
+        "close" : 373.31
+    },
+    {
+        "reported_at" : "2025-06-12",
+        "close" : 371.4
+    },
+    {
+        "reported_at" : "2025-06-13",
+        "close" : 352.85
+    },
+    {
+        "reported_at" : "2025-06-16",
+        "close" : 355.48
+    },
+    {
+        "reported_at" : "2025-06-17",
+        "close" : 357.84
+    },
+    {
+        "reported_at" : "2025-06-18",
+        "close" : 340.38
+    },
+    {
+        "reported_at" : "2025-06-20",
+        "close" : 338.57
+    },
+    {
+        "reported_at" : "2025-06-23",
+        "close" : 343.75
+    },
+    {
+        "reported_at" : "2025-06-24",
+        "close" : 351.63
+    },
+    {
+        "reported_at" : "2025-06-25",
+        "close" : 345.26
+    },
+    {
+        "reported_at" : "2025-06-26",
+        "close" : 346.03
+    },
+    {
+        "reported_at" : "2025-06-27",
+        "close" : 348.61
+    },
+    {
+        "reported_at" : "2025-06-30",
+        "close" : 355.05
+    },
+    {
+        "reported_at" : "2025-07-01",
+        "close" : 355.47
+    },
+    {
+        "reported_at" : "2025-07-02",
+        "close" : 354.22
+    },
+    {
+        "reported_at" : "2025-07-03",
+        "close" : 358.86
+    },
+    {
+        "reported_at" : "2025-07-07",
+        "close" : 356.64
+    },
+    {
+        "reported_at" : "2025-07-08",
+        "close" : 354.55
+    },
+    {
+        "reported_at" : "2025-07-09",
+        "close" : 357.76
+    },
+    {
+        "reported_at" : "2025-07-10",
+        "close" : 355.88
+    },
+    {
+        "reported_at" : "2025-07-11",
+        "close" : 347.93
+    },
+    {
+        "reported_at" : "2025-07-14",
+        "close" : 350.5
+    },
+    {
+        "reported_at" : "2025-07-15",
+        "close" : 347.02
+    },
+    {
+        "reported_at" : "2025-07-16",
+        "close" : 349.9
+    },
+    {
+        "reported_at" : "2025-07-17",
+        "close" : 349.81
+    },
+    {
+        "reported_at" : "2025-07-18",
+        "close" : 349.05
+    },
+    {
+        "reported_at" : "2025-07-21",
+        "close" : 350.94
+    },
+    {
+        "reported_at" : "2025-07-22",
+        "close" : 351.86
+    },
+    {
+        "reported_at" : "2025-07-23",
+        "close" : 355.29
+    },
+    {
+        "reported_at" : "2025-07-24",
+        "close" : 353.97
+    },
+    {
+        "reported_at" : "2025-07-25",
+        "close" : 357.04
+    },
+    {
+        "reported_at" : "2025-07-28",
+        "close" : 355.47
+    },
+    {
+        "reported_at" : "2025-07-29",
+        "close" : 351.29
+    },
+    {
+        "reported_at" : "2025-07-30",
+        "close" : 350.91
+    },
+    {
+        "reported_at" : "2025-07-31",
+        "close" : 345.47
+    },
+    {
+        "reported_at" : "2025-08-01",
+        "close" : 339.35
+    },
+    {
+        "reported_at" : "2025-08-04",
+        "close" : 342.15
+    },
+    {
+        "reported_at" : "2025-08-05",
+        "close" : 337.43
+    },
+    {
+        "reported_at" : "2025-08-06",
+        "close" : 339.74
+    },
+    {
+        "reported_at" : "2025-08-07",
+        "close" : 332.09
+    },
+    {
+        "reported_at" : "2025-08-08",
+        "close" : 336.78
+    },
+    {
+        "reported_at" : "2025-08-11",
+        "close" : 335.9
+    },
+    {
+        "reported_at" : "2025-08-12",
+        "close" : 336.74
+    },
+    {
+        "reported_at" : "2025-08-13",
+        "close" : 342.55
+    },
+    {
+        "reported_at" : "2025-08-14",
+        "close" : 345.49
+    },
+    {
+        "reported_at" : "2025-08-15",
+        "close" : 344.47
+    },
+    {
+        "reported_at" : "2025-08-18",
+        "close" : 342.74
+    },
+    {
+        "reported_at" : "2025-08-19",
+        "close" : 342.45
+    },
+    {
+        "reported_at" : "2025-08-20",
+        "close" : 343.93
+    },
+    {
+        "reported_at" : "2025-08-21",
+        "close" : 343.69
+    },
+    {
+        "reported_at" : "2025-08-22",
+        "close" : 350.04
+    },
+    {
+        "reported_at" : "2025-08-25",
+        "close" : 348.82
+    },
+    {
+        "reported_at" : "2025-08-26",
+        "close" : 351.18
+    },
+    {
+        "reported_at" : "2025-08-27",
+        "close" : 350.35
+    },
+    {
+        "reported_at" : "2025-08-28",
+        "close" : 349.86
+    },
+    {
+        "reported_at" : "2025-08-29",
+        "close" : 351.78
+    },
+    {
+        "reported_at" : "2025-09-02",
+        "close" : 350.07
+    },
+    {
+        "reported_at" : "2025-09-03",
+        "close" : 350.87
+    },
+    {
+        "reported_at" : "2025-09-04",
+        "close" : 350.99
+    },
+    {
+        "reported_at" : "2025-09-05",
+        "close" : 343.22
+    },
+    {
+        "reported_at" : "2025-09-08",
+        "close" : 342.3
+    },
+    {
+        "reported_at" : "2025-09-09",
+        "close" : 343.99
+    },
+    {
+        "reported_at" : "2025-09-10",
+        "close" : 338.12
+    },
+    {
+        "reported_at" : "2025-09-11",
+        "close" : 343.49
+    },
+    {
+        "reported_at" : "2025-09-12",
+        "close" : 339.43
+    },
+    {
+        "reported_at" : "2025-09-15",
+        "close" : 339.05
+    },
+    {
+        "reported_at" : "2025-09-16",
+        "close" : 340.03
+    },
+    {
+        "reported_at" : "2025-09-17",
+        "close" : 346.2
+    },
+    {
+        "reported_at" : "2025-09-18",
+        "close" : 338.18
+    },
+    {
+        "reported_at" : "2025-09-19",
+        "close" : 341.61
+    },
+    {
+        "reported_at" : "2025-09-22",
+        "close" : 344.36
+    },
+    {
+        "reported_at" : "2025-09-23",
+        "close" : 338.7
+    },
+    {
+        "reported_at" : "2025-09-24",
+        "close" : 338.68
+    },
+    {
+        "reported_at" : "2025-09-25",
+        "close" : 334.93
+    },
+    {
+        "reported_at" : "2025-09-26",
+        "close" : 337.37
+    },
+    {
+        "reported_at" : "2025-09-29",
+        "close" : 340.16
+    },
+    {
+        "reported_at" : "2025-09-30",
+        "close" : 341.38
+    },
+    {
+        "reported_at" : "2025-10-01",
+        "close" : 347.83
+    },
+    {
+        "reported_at" : "2025-10-02",
+        "close" : 345.95
+    },
+    {
+        "reported_at" : "2025-10-03",
+        "close" : 349.84
+    },
+    {
+        "reported_at" : "2025-10-06",
+        "close" : 349.28
+    },
+    {
+        "reported_at" : "2025-10-07",
+        "close" : 352.42
+    },
+    {
+        "reported_at" : "2025-10-08",
+        "close" : 351.36
+    },
+    {
+        "reported_at" : "2025-10-09",
+        "close" : 347.04
+    },
+    {
+        "reported_at" : "2025-10-10",
+        "close" : 343.65
+    },
+    {
+        "reported_at" : "2025-10-13",
+        "close" : 343.3
+    },
+    {
+        "reported_at" : "2025-10-14",
+        "close" : 348.38
+    },
+    {
+        "reported_at" : "2025-10-15",
+        "close" : 345.69
+    },
+    {
+        "reported_at" : "2025-10-16",
+        "close" : 335.4
+    },
+    {
+        "reported_at" : "2025-10-17",
+        "close" : 341.89
+    },
+    {
+        "reported_at" : "2025-10-20",
+        "close" : 344.41
+    },
+    {
+        "reported_at" : "2025-10-21",
+        "close" : 347.21
+    },
+    {
+        "reported_at" : "2025-10-22",
+        "close" : 345.36
+    },
+    {
+        "reported_at" : "2025-10-23",
+        "close" : 345.96
+    },
+    {
+        "reported_at" : "2025-10-24",
+        "close" : 347.38
+    },
+    {
+        "reported_at" : "2025-10-27",
+        "close" : 347.82
+    },
+    {
+        "reported_at" : "2025-10-28",
+        "close" : 346.9
+    },
+    {
+        "reported_at" : "2025-10-29",
+        "close" : 341.28
+    },
+    {
+        "reported_at" : "2025-10-30",
+        "close" : 345.03
+    },
+    {
+        "reported_at" : "2025-10-31",
+        "close" : 340.74
+    },
+    {
+        "reported_at" : "2025-11-03",
+        "close" : 336.9
+    },
+    {
+        "reported_at" : "2025-11-04",
+        "close" : 340.3
+    },
+    {
+        "reported_at" : "2025-11-05",
+        "close" : 340.04
+    },
+    {
+        "reported_at" : "2025-11-06",
+        "close" : 336.96
+    },
+    {
+        "reported_at" : "2025-11-07",
+        "close" : 336.02
+    },
+    {
+        "reported_at" : "2025-11-10",
+        "close" : 334.85
+    },
+    {
+        "reported_at" : "2025-11-11",
+        "close" : 338.92
+    },
+    {
+        "reported_at" : "2025-11-12",
+        "close" : 338.88
+    },
+    {
+        "reported_at" : "2025-11-13",
+        "close" : 336.08
+    },
+    {
+        "reported_at" : "2025-11-14",
+        "close" : 330.02
+    },
+    {
+        "reported_at" : "2025-11-17",
+        "close" : 325.75
+    },
+    {
+        "reported_at" : "2025-11-18",
+        "close" : 321.18
+    },
+    {
+        "reported_at" : "2025-11-19",
+        "close" : 324.12
+    },
+    {
+        "reported_at" : "2025-11-20",
+        "close" : 323.77
+    },
+    {
+        "reported_at" : "2025-11-21",
+        "close" : 327.98
+    },
+    {
+        "reported_at" : "2025-11-24",
+        "close" : 329.3
+    },
+    {
+        "reported_at" : "2025-11-25",
+        "close" : 334.53
+    },
+    {
+        "reported_at" : "2025-11-26",
+        "close" : 333.79
+    },
+    {
+        "reported_at" : "2025-11-28",
+        "close" : 334.44
+    },
+    {
+        "reported_at" : "2025-12-01",
+        "close" : 330.39
+    },
+    {
+        "reported_at" : "2025-12-02",
+        "close" : 329.62
+    },
+    {
+        "reported_at" : "2025-12-03",
+        "close" : 329.61
+    },
+    {
+        "reported_at" : "2025-12-04",
+        "close" : 327.1
+    },
+    {
+        "reported_at" : "2025-12-05",
+        "close" : 331.24
+    },
+    {
+        "reported_at" : "2025-12-08",
+        "close" : 326.84
+    },
+    {
+        "reported_at" : "2025-12-09",
+        "close" : 326.5
+    },
+    {
+        "reported_at" : "2025-12-10",
+        "close" : 325.73
+    },
+    {
+        "reported_at" : "2025-12-11",
+        "close" : 345.63
+    },
+    {
+        "reported_at" : "2025-12-12",
+        "close" : 347.83
+    },
+    {
+        "reported_at" : "2025-12-15",
+        "close" : 346.89
+    },
+    {
+        "reported_at" : "2025-12-16",
+        "close" : 345.11
+    },
+    {
+        "reported_at" : "2025-12-17",
+        "close" : 344.41
+    },
+    {
+        "reported_at" : "2025-12-18",
+        "close" : 346.01
+    },
+    {
+        "reported_at" : "2025-12-19",
+        "close" : 349.25
+    },
+    {
+        "reported_at" : "2025-12-22",
+        "close" : 352.09
+    },
+    {
+        "reported_at" : "2025-12-23",
+        "close" : 353.38
+    },
+    {
+        "reported_at" : "2025-12-24",
+        "close" : 355.14
+    },
+    {
+        "reported_at" : "2025-12-26",
+        "close" : 355
+    },
+    {
+        "reported_at" : "2025-12-29",
+        "close" : 354.61
+    },
+    {
+        "reported_at" : "2025-12-30",
+        "close" : 353.62
+    },
+    {
+        "reported_at" : "2025-12-31",
+        "close" : 350.71
+    },
+    {
+        "reported_at" : "2026-01-02",
+        "close" : 346.48
+    },
+    {
+        "reported_at" : "2026-01-05",
+        "close" : 353.8
+    },
+    {
+        "reported_at" : "2026-01-06",
+        "close" : 357.56
+    },
+    {
+        "reported_at" : "2026-01-07",
+        "close" : 355.88
+    },
+    {
+        "reported_at" : "2026-01-08",
+        "close" : 352.23
+    },
+    {
+        "reported_at" : "2026-01-09",
+        "close" : 349.77
+    },
+    {
+        "reported_at" : "2026-01-12",
+        "close" : 343.2
+    },
+    {
+        "reported_at" : "2026-01-13",
+        "close" : 327.88
+    },
+    {
+        "reported_at" : "2026-01-14",
+        "close" : 329.17
+    },
+    {
+        "reported_at" : "2026-01-15",
+        "close" : 327.75
+    },
+    {
+        "reported_at" : "2026-01-16",
+        "close" : 328.3
+    },
+    {
+        "reported_at" : "2026-01-20",
+        "close" : 325.82
+    },
+    {
+        "reported_at" : "2026-01-21",
+        "close" : 325.28
+    },
+    {
+        "reported_at" : "2026-01-22",
+        "close" : 326.36
+    },
+    {
+        "reported_at" : "2026-01-23",
+        "close" : 326.18
+    },
+    {
+        "reported_at" : "2026-01-26",
+        "close" : 328.49
+    },
+    {
+        "reported_at" : "2026-01-27",
+        "close" : 325.26
+    },
+    {
+        "reported_at" : "2026-01-28",
+        "close" : 326.98
+    },
+    {
+        "reported_at" : "2026-01-29",
+        "close" : 331.8
+    },
+    {
+        "reported_at" : "2026-01-30",
+        "close" : 321.83
+    },
+    {
+        "reported_at" : "2026-02-02",
+        "close" : 333.84
+    },
+    {
+        "reported_at" : "2026-02-03",
+        "close" : 328.93
+    },
+    {
+        "reported_at" : "2026-02-04",
+        "close" : 329.95
+    },
+    {
+        "reported_at" : "2026-02-05",
+        "close" : 329.13
+    },
+    {
+        "reported_at" : "2026-02-06",
+        "close" : 331.58
+    },
+    {
+        "reported_at" : "2026-02-09",
+        "close" : 325.58
+    },
+    {
+        "reported_at" : "2026-02-10",
+        "close" : 328.17
+    },
+    {
+        "reported_at" : "2026-02-11",
+        "close" : 329.24
+    },
+    {
+        "reported_at" : "2026-02-12",
+        "close" : 324.18
+    },
+    {
+        "reported_at" : "2026-02-13",
+        "close" : 314.08
+    },
+    {
+        "reported_at" : "2026-02-17",
+        "close" : 319.5
+    },
+    {
+        "reported_at" : "2026-02-18",
+        "close" : 320.3
+    },
+    {
+        "reported_at" : "2026-02-19",
+        "close" : 318.93
+    },
+    {
+        "reported_at" : "2026-02-20",
+        "close" : 320.95
+    },
+    {
+        "reported_at" : "2026-02-23",
+        "close" : 306.52
+    },
+    {
+        "reported_at" : "2026-02-24",
+        "close" : 307.22
+    },
+    {
+        "reported_at" : "2026-02-25",
+        "close" : 312.99
+    },
+    {
+        "reported_at" : "2026-02-26",
+        "close" : 316.7
+    },
+    {
+        "reported_at" : "2026-02-27",
+        "close" : 320.14
+    },
+    {
+        "reported_at" : "2026-03-02",
+        "close" : 320.51
+    },
+    {
+        "reported_at" : "2026-03-03",
+        "close" : 320.83
+    },
+    {
+        "reported_at" : "2026-03-04",
+        "close" : 320.47
+    },
+    {
+        "reported_at" : "2026-03-05",
+        "close" : 319.8
+    },
+    {
+        "reported_at" : "2026-03-06",
+        "close" : 317.36
+    },
+    {
+        "reported_at" : "2026-03-09",
+        "close" : 315.97
+    },
+    {
+        "reported_at" : "2026-03-10",
+        "close" : 314.43
+    },
+    {
+        "reported_at" : "2026-03-11",
+        "close" : 308.96
+    },
+    {
+        "reported_at" : "2026-03-12",
+        "close" : 306.5
+    },
+    {
+        "reported_at" : "2026-03-13",
+        "close" : 307.14
+    },
+    {
+        "reported_at" : "2026-03-16",
+        "close" : 310.11
+    },
+    {
+        "reported_at" : "2026-03-17",
+        "close" : 308.46
+    },
+    {
+        "reported_at" : "2026-03-18",
+        "close" : 299.02
+    },
+    {
+        "reported_at" : "2026-03-19",
+        "close" : 299.71
+    },
+    {
+        "reported_at" : "2026-03-20",
+        "close" : 301.62
+    },
+    {
+        "reported_at" : "2026-03-23",
+        "close" : 304.44
+    },
+    {
+        "reported_at" : "2026-03-24",
+        "close" : 303.76
+    },
+    {
+        "reported_at" : "2026-03-25",
+        "close" : 304.91
+    },
+    {
+        "reported_at" : "2026-03-26",
+        "close" : 305.53
+    },
+    {
+        "reported_at" : "2026-03-27",
+        "close" : 295.52
+    },
+    {
+        "reported_at" : "2026-03-30",
+        "close" : 299.54
+    },
+    {
+        "reported_at" : "2026-03-31",
+        "close" : 302.24
+    },
+    {
+        "reported_at" : "2026-04-01",
+        "close" : 298.51
+    },
+    {
+        "reported_at" : "2026-04-02",
+        "close" : 300.8
+    }
+]
