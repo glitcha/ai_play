@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Cronse app icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#155e75"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#fb7185"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="108" height="108" rx="28" fill="url(#bg)"/>
+  <path d="M36 36h56" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round" opacity="0.85"/>
+  <path d="M36 64c10-20 18-28 30-28 11 0 17 5 26 12" fill="none" stroke="url(#glow)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M35 84c12 8 21 12 32 12 13 0 21-4 31-14" fill="none" stroke="#67e8f9" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="44" cy="84" r="7" fill="#f8fafc"/>
+  <circle cx="78" cy="48" r="6" fill="#fbbf24"/>
+</svg>

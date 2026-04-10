@@ -3,15 +3,13 @@ import json
 import shutil
 from datetime import date, timedelta
 from pathlib import Path
-from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+
+from data_sources import fetch_tiingo_daily_prices, load_tiingo_api_key
 
 
-DEFAULT_TICKERS = ["MSFT", "NVDA", "TSLA", "V"]
+DEFAULT_TICKERS = ["MSFT", "NVDA", "TSLA", "V", "AAPL", "AMZN", "GOOGL", "META", "JPM", "UNH"]
 DEFAULT_LOOKBACK_DAYS = 365 * 10
-TIINGO_API_BASE = "https://api.tiingo.com/tiingo/daily"
-DEFAULT_SETTINGS_PATH = Path(__file__).with_name("tiingo_settings.json")
+DEFAULT_SETTINGS_PATH = Path(__file__).with_name("settings.json")
 
 
 def main():
@@ -62,8 +60,13 @@ def main():
     written_files = []
     for ticker in tickers:
         try:
-            rows = fetch_tiingo_prices(ticker, args.start_date, args.end_date, api_key)
-        except RuntimeError as exc:
+            rows = fetch_tiingo_daily_prices(
+                ticker,
+                start_date=args.start_date,
+                end_date=args.end_date,
+                api_key=api_key,
+            )
+        except ValueError as exc:
             failures.append(f"{ticker}: {exc}")
             continue
 
@@ -71,7 +74,7 @@ def main():
             failures.append(f"{ticker}: no price rows returned")
             continue
 
-        output_path = output_dir / f"data_{ticker.lower()}.json"
+        output_path = output_dir / f"{ticker.lower()}.json"
         output_path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
         written_files.append(output_path.name)
 
@@ -96,76 +99,9 @@ def clear_training_directory(training_dir):
 
 def load_api_key(settings_path):
     try:
-        payload = json.loads(settings_path.read_text(encoding="utf-8"))
-    except OSError as exc:
-        raise SystemExit(f"Could not read settings file {settings_path}: {exc}") from exc
-    except json.JSONDecodeError as exc:
-        raise SystemExit(f"Settings file {settings_path} is not valid JSON.") from exc
-
-    if not isinstance(payload, dict):
-        raise SystemExit(f"Settings file {settings_path} must contain a JSON object.")
-
-    api_key = str(payload.get("tiingo_api_key", "")).strip()
-    if not api_key or api_key == "REPLACE_WITH_YOUR_TIINGO_API_KEY":
-        raise SystemExit(
-            f"Set tiingo_api_key in {settings_path} before running this script."
-        )
-
-    return api_key
-
-
-def fetch_tiingo_prices(ticker, start_date, end_date, api_key):
-    query = urlencode(
-        {
-            "startDate": start_date,
-            "endDate": end_date,
-            "resampleFreq": "daily",
-        }
-    )
-    url = f"{TIINGO_API_BASE}/{ticker}/prices?{query}"
-    request = Request(
-        url,
-        headers={
-            "Authorization": f"Token {api_key}",
-            "Content-Type": "application/json",
-        },
-    )
-
-    try:
-        with urlopen(request, timeout=30) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-    except HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"HTTP {exc.code}: {detail}") from exc
-    except URLError as exc:
-        raise RuntimeError(f"Network error: {exc.reason}") from exc
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("Tiingo returned invalid JSON") from exc
-
-    if not isinstance(payload, list):
-        raise RuntimeError(f"Unexpected response: {payload!r}")
-
-    rows = []
-    for item in payload:
-        if not isinstance(item, dict):
-            continue
-        reported_at = str(item.get("date", ""))[:10]
-        close_value = item.get("adjClose", item.get("close"))
-        if not reported_at:
-            continue
-        try:
-            close_number = float(close_value)
-        except (TypeError, ValueError):
-            continue
-        rows.append(
-            {
-                "reported_at": reported_at,
-                "close": round(close_number, 4),
-            }
-        )
-
-    rows.sort(key=lambda row: row["reported_at"])
-    return rows
+        return load_tiingo_api_key(settings_path)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
 
 if __name__ == "__main__":
