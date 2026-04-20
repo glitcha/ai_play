@@ -1,19 +1,28 @@
 import json
 import tempfile
+import urllib.parse
+import webbrowser
 from pathlib import Path
 from datetime import datetime, timedelta
 
 import gi
 gi.require_version('Adw', '1')
+gi.require_version('Gdk', '4.0')
 gi.require_version('Gtk', '4.0')
 import matplotlib
 matplotlib.use("Agg")
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
-from gi.repository import Adw, Gdk, GLib, Gtk
+from gi.repository import Adw, Gdk, GLib, GObject, Gtk
 
 from aichart import AIChart
 from data_sources import fetch_tiingo_daily_prices, load_dip_labels, load_time_series_file, load_training_samples
+
+APP_NAME = "Cronse"
+APP_TAGLINE = "Stock Dip Predictor"
+APP_TITLE = f"{APP_NAME} {APP_TAGLINE}"
+APP_ID = "com.colin.cronse"
+APP_ICON_NAME = "cronse"
 
 class AIChartWindow(Adw.ApplicationWindow):
     FALLBACK_CHART_WIDTH = 900
@@ -22,27 +31,31 @@ class AIChartWindow(Adw.ApplicationWindow):
     RENDER_SCALE_MULTIPLIER = 2
 
     def __init__(self, application):
-        super().__init__(application=application, title="AIChart Stock Dip Predictor")
+        super().__init__(application=application, title=APP_TITLE)
         self.base_path = Path(__file__).parent
         self.model_path = self.base_path / "trained_model.pt"
         self.training_data_dir = self.base_path / "training_data"
         self.chart_points = []
         self.chart_error = ""
-        self.chart_image_path = Path(tempfile.gettempdir()) / "aichart_preview.png"
+        self.chart_image_path = Path(tempfile.gettempdir()) / "cronse_preview.png"
         self.current_ticker = ""
         self.chart_render_info = None
         self.chart_hover_index = None
-        self.ui_state_path = Path(GLib.get_user_config_dir()) / "aichart" / "ui_state.json"
+        self.ui_state_path = Path(GLib.get_user_config_dir()) / "cronse" / "ui_state.json"
+        self.show_training_points = False
         self.ai_chart = AIChart()
         self.model_analysis = None
         self.dip_labels_by_ticker = load_dip_labels(self.base_path)
         self.training_samples = load_training_samples(self.base_path)
         self.available_tickers = self._available_training_tickers()
+        window_state = self._load_ui_state()
+        self.favourite_tickers = self._load_favourite_tickers(window_state)
+        self._updating_favourite_button = False
         self._restoring_paned_position = True
 
-        self._load_saved_model()
+        self._install_app_icon()
 
-        window_state = self._load_ui_state()
+        self._load_saved_model()
         width = window_state.get("window_width", 800)
         height = window_state.get("window_height", 400)
         self.set_default_size(width, height)
@@ -52,7 +65,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.set_content(toolbar_view)
 
         header_bar = Adw.HeaderBar()
-        header_bar.set_title_widget(Gtk.Label(label="AIChart Stock Dip Predictor"))
+        header_bar.set_title_widget(self._build_title_widget())
         toolbar_view.add_top_bar(header_bar)
 
         self.paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
@@ -95,11 +108,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         ticker_scroll.set_child(self.ticker_list)
 
         for ticker in self.available_tickers:
-            row = Gtk.ListBoxRow()
-            row.set_selectable(True)
-            row.set_activatable(True)
-            row.set_child(Gtk.Label(label=ticker, xalign=0))
-            self.ticker_list.append(row)
+            self._append_ticker_row(ticker)
 
         right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         right_box.set_margin_top(10)
@@ -126,6 +135,21 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.add_point_button = Gtk.ToggleButton(label="Add Point")
         self.add_point_button.connect("toggled", self.on_add_point_toggled)
         chart_controls.append(self.add_point_button)
+
+        self.training_points_toggle = Gtk.ToggleButton(label="Training Points")
+        self.training_points_toggle.set_active(False)
+        self.training_points_toggle.connect("toggled", self.on_training_points_toggled)
+        chart_controls.append(self.training_points_toggle)
+
+        self.share_to_x_button = Gtk.Button(label="Add to X")
+        self.share_to_x_button.connect("clicked", self.on_add_to_x_clicked)
+        chart_controls.append(self.share_to_x_button)
+
+        self.favourite_button = Gtk.ToggleButton()
+        self.favourite_button.set_icon_name("non-starred-symbolic")
+        self.favourite_button.set_tooltip_text("Add to favourites")
+        self.favourite_button.connect("toggled", self.on_favourite_toggled)
+        chart_controls.append(self.favourite_button)
 
         self.chart_hint_label = Gtk.Label(label="Hover the line for date/value. Right click a label to remove it.")
         self.chart_hint_label.set_xalign(0)
@@ -179,6 +203,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.paned.connect("notify::position", self.on_paned_position_changed)
         self.connect("close-request", self.on_close_request)
 
+        self._update_favourite_button()
         self._select_initial_ticker()
 
     def on_ticker_selected(self, list_box, row):
@@ -186,8 +211,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         if row is None:
             return
 
-        child = row.get_child()
-        ticker = child.get_text().strip().upper() if child is not None else ""
+        ticker = self._ticker_from_row(row)
         if ticker:
             self._load_ticker_data(ticker)
 
@@ -268,6 +292,63 @@ class AIChartWindow(Adw.ApplicationWindow):
 
     def on_chart_leave(self, _controller):
         self._hide_hover_popover()
+
+    def on_add_to_x_clicked(self, _button):
+        if not self.current_ticker or len(self.chart_points) < 2:
+            self.result_label.set_text("Load a ticker chart before sending it to X.")
+            return
+
+        self._render_chart_image()
+
+        try:
+            self._copy_chart_image_to_clipboard()
+        except GLib.Error as exc:
+            self.result_label.set_text(f"Unable to copy chart image for X: {exc.message}")
+            return
+        except (OSError, ValueError) as exc:
+            self.result_label.set_text(f"Unable to copy chart image for X: {exc}")
+            return
+
+        share_url = self._x_compose_url()
+        try:
+            opened = webbrowser.open(share_url, new=2)
+        except webbrowser.Error as exc:
+            self.result_label.set_text(f"Copied chart image, but could not open X: {exc}")
+            return
+
+        if not opened:
+            self.result_label.set_text("Copied chart image, but could not open X in your default browser.")
+            return
+
+        self.result_label.set_text(
+            "Copied the chart image to your clipboard and opened X. Paste in the composer to attach it."
+        )
+
+    def on_favourite_toggled(self, button):
+        if self._updating_favourite_button:
+            return
+
+        if not self.current_ticker:
+            self.result_label.set_text("Load a ticker before adding it to favourites.")
+            self._update_favourite_button()
+            return
+
+        ticker = self.current_ticker
+        if button.get_active():
+            self.favourite_tickers.add(ticker)
+            self.result_label.set_text(f"Added {ticker} to favourites.")
+        else:
+            self.favourite_tickers.discard(ticker)
+            self.result_label.set_text(f"Removed {ticker} from favourites.")
+
+        self._persist_favourites()
+        self._refresh_ticker_icons()
+        self._update_favourite_button()
+
+    def on_training_points_toggled(self, button):
+        self.show_training_points = button.get_active()
+        if self.chart_points or self.chart_error:
+            self._render_chart_image()
 
     def on_paned_position_changed(self, paned, _property_spec):
         if self._restoring_paned_position:
@@ -374,7 +455,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             axis.set_ylim(baseline, max_value + (value_range * 0.1))
 
             labeled_indices = self._labeled_dip_indices(labels)
-            if labeled_indices:
+            if self.show_training_points and labeled_indices:
                 labeled_values = [values[index] for index in labeled_indices]
                 axis.scatter(
                     labeled_indices,
@@ -634,11 +715,81 @@ class AIChartWindow(Adw.ApplicationWindow):
                 tickers.append(ticker)
         return tickers
 
+    def _load_favourite_tickers(self, state):
+        saved_favourites = state.get("favourite_tickers", state.get("favorite_tickers", []))
+        if not isinstance(saved_favourites, list):
+            return set()
+        return {
+            str(ticker).strip().upper()
+            for ticker in saved_favourites
+            if str(ticker).strip()
+        }
+
+    def _persist_favourites(self):
+        state = self._load_ui_state()
+        state["favourite_tickers"] = sorted(self.favourite_tickers)
+        self._save_ui_state(state)
+
+    def _ticker_icon_name(self, ticker):
+        return "starred-symbolic" if ticker in self.favourite_tickers else "text-x-generic-symbolic"
+
+    def _ticker_from_row(self, row):
+        return str(getattr(row, "ticker", "")).strip().upper()
+
+    def _refresh_ticker_icons(self):
+        row = self.ticker_list.get_first_child()
+        while row is not None:
+            self._sync_ticker_row_icon(row)
+            row = row.get_next_sibling()
+
+    def _sync_ticker_row_icon(self, row):
+        icon = getattr(row, "ticker_icon", None)
+        ticker = self._ticker_from_row(row)
+        if icon is None or not ticker:
+            return
+
+        icon.set_from_icon_name(self._ticker_icon_name(ticker))
+        if ticker in self.favourite_tickers:
+            icon.add_css_class("favourite-ticker-icon")
+        else:
+            icon.remove_css_class("favourite-ticker-icon")
+
+    def _update_favourite_button(self):
+        if not hasattr(self, "favourite_button"):
+            return
+
+        is_favourite = bool(self.current_ticker and self.current_ticker in self.favourite_tickers)
+        self._updating_favourite_button = True
+        self.favourite_button.set_sensitive(bool(self.current_ticker))
+        self.favourite_button.set_active(is_favourite)
+        self.favourite_button.set_icon_name("starred-symbolic" if is_favourite else "non-starred-symbolic")
+        self.favourite_button.set_tooltip_text(
+            "Remove from favourites" if is_favourite else "Add to favourites"
+        )
+        self._updating_favourite_button = False
+
     def _append_ticker_row(self, ticker):
         row = Gtk.ListBoxRow()
         row.set_selectable(True)
         row.set_activatable(True)
-        row.set_child(Gtk.Label(label=ticker, xalign=0))
+        row.ticker = ticker
+
+        row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        row_box.set_margin_top(4)
+        row_box.set_margin_bottom(4)
+        row_box.set_margin_start(4)
+        row_box.set_margin_end(4)
+
+        row.ticker_icon = Gtk.Image.new_from_icon_name(self._ticker_icon_name(ticker))
+        row.ticker_icon.set_pixel_size(16)
+        self._sync_ticker_row_icon(row)
+        row_box.append(row.ticker_icon)
+
+        label = Gtk.Label(label=ticker, xalign=0)
+        label.set_hexpand(True)
+        row_box.append(label)
+
+        row.set_child(row_box)
         self.ticker_list.append(row)
         return row
 
@@ -647,6 +798,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             self.chart_error = "No ticker files found in training_data."
             self.model_analysis = None
             self.result_label.set_text(self.chart_error)
+            self._update_favourite_button()
             self._render_chart_image()
             return
 
@@ -664,6 +816,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             self.chart_points = []
             self.chart_error = f"Unable to load {ticker}: {exc}"
             self.model_analysis = None
+            self._update_favourite_button()
             self.result_label.set_text(self.chart_error)
             self._render_chart_image()
             return
@@ -677,6 +830,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         ]
         self.current_ticker = ticker
         self.update_chart_from_rows(rows)
+        self._update_favourite_button()
         self.result_label.set_text(f"Loaded {ticker}. Hover the line for date/value. Right click a labeled date to remove it.")
 
     def _fetch_and_add_ticker(self, ticker):
@@ -726,8 +880,7 @@ class AIChartWindow(Adw.ApplicationWindow):
     def _select_ticker_in_list(self, ticker):
         row = self.ticker_list.get_first_child()
         while row is not None:
-            child = row.get_child()
-            row_ticker = child.get_text().strip().upper() if child is not None else ""
+            row_ticker = self._ticker_from_row(row)
             if row_ticker == ticker:
                 self.ticker_list.select_row(row)
                 return
@@ -888,7 +1041,46 @@ class AIChartWindow(Adw.ApplicationWindow):
 
     def _save_ui_state(self, state):
         self.ui_state_path.parent.mkdir(parents=True, exist_ok=True)
-        self.ui_state_path.write_text(json.dumps(state), encoding="utf-8")
+        self.ui_state_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+    def _copy_chart_image_to_clipboard(self):
+        if not self.chart_image_path.exists():
+            raise OSError(f"Missing chart image at {self.chart_image_path}")
+
+        display = Gdk.Display.get_default()
+        if display is None:
+            raise ValueError("No graphical display is available.")
+
+        texture = Gdk.Texture.new_from_filename(str(self.chart_image_path))
+        texture_value = GObject.Value()
+        texture_value.init(Gdk.Texture)
+        texture_value.set_object(texture)
+
+        provider = Gdk.ContentProvider.new_for_value(texture_value)
+        clipboard = display.get_clipboard()
+        if not clipboard.set_content(provider):
+            raise ValueError("The clipboard rejected the chart image.")
+
+    def _x_compose_url(self):
+        query = urllib.parse.urlencode({"text": self._x_share_text()})
+        return f"https://twitter.com/intent/tweet?{query}"
+
+    def _x_share_text(self):
+        if not self.current_ticker:
+            return "Chart from Cronse"
+
+        projected_dip = self.model_analysis.get("projected_dip") if self.model_analysis else None
+        if projected_dip:
+            projected_date = self._projected_date(self.chart_points[-1][0], projected_dip["bars_ahead"])
+            return (
+                f"{self.current_ticker} chart AI projected buying point: "
+                f"{projected_date} near ${projected_dip['target_price']:.2f}."
+            )
+
+        current_close = self.chart_points[-1][1] if self.chart_points else None
+        if current_close is None:
+            return f"{self.current_ticker} chart from Cronse"
+        return f"{self.current_ticker} chart current close: ${current_close:.2f}."
 
     def _install_css(self):
         css_provider = Gtk.CssProvider()
@@ -898,6 +1090,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             b" .chart-hover-popover { background-color: rgba(9, 16, 28, 0.98); border: 1px solid rgba(103, 232, 249, 0.7); border-radius: 10px; padding: 7px 9px; box-shadow: 0 10px 30px rgba(34, 211, 238, 0.15); }"
             b" .chart-hover-date { color: #f5f3ff; font-weight: 700; }"
             b" .chart-hover-value { color: #67e8f9; }"
+            b" .favourite-ticker-icon { color: #22c55e; }"
         )
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
@@ -905,10 +1098,34 @@ class AIChartWindow(Adw.ApplicationWindow):
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
+    def _install_app_icon(self):
+        display = Gdk.Display.get_default()
+        if display is None:
+            return
+
+        icon_root = self.base_path / "icons"
+        icon_theme = Gtk.IconTheme.get_for_display(display)
+        icon_theme.add_search_path(str(icon_root))
+        Gtk.Window.set_default_icon_name(APP_ICON_NAME)
+        self.set_icon_name(APP_ICON_NAME)
+
+    def _build_title_widget(self):
+        title_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+
+        icon = Gtk.Image.new_from_icon_name(APP_ICON_NAME)
+        icon.set_pixel_size(24)
+        title_box.append(icon)
+
+        label = Gtk.Label(label=APP_TITLE)
+        label.add_css_class("title-3")
+        title_box.append(label)
+
+        return title_box
+
 
 class AIChartApp(Adw.Application):
     def __init__(self):
-        super().__init__(application_id="com.example.aichart")
+        super().__init__(application_id=APP_ID)
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
 

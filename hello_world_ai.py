@@ -15,7 +15,7 @@ def log_retrain_progress(message):
     print(f"[retrain] {message}", flush=True)
 
 def main():
-    parser = argparse.ArgumentParser(description="AIChart Stock Dip Predictor")
+    parser = argparse.ArgumentParser(description="Cronse Stock Dip Predictor")
     parser.add_argument('--retrain', action='store_true', help='Retrain the model')
     args = parser.parse_args()
 

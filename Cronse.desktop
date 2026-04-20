@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Cronse
+Comment=Stock Dip Predictor
+Exec=/home/colin/src/ai_play/ml_env/bin/python /home/colin/src/ai_play/main.py
+Path=/home/colin/src/ai_play
+Icon=cronse
+Terminal=false
+Categories=Office;Finance;
+StartupNotify=true
+StartupWMClass=Cronse
