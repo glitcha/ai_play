@@ -53,6 +53,9 @@ class AIChartWindow(Adw.ApplicationWindow):
         self._updating_favourite_button = False
         self._restoring_paned_position = True
 
+        # Restore favourites filter toggle state
+        self._favourites_filter_active = window_state.get("favourites_filter_active", False)
+
         self._install_app_icon()
 
         self._load_saved_model()
@@ -107,8 +110,40 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.ticker_list.connect("row-selected", self.on_ticker_selected)
         ticker_scroll.set_child(self.ticker_list)
 
-        for ticker in self.available_tickers:
+        # Add favourites filter toggle
+        self.favourites_filter_toggle = Gtk.ToggleButton(label="Favourites only")
+        self.favourites_filter_toggle.set_active(self._favourites_filter_active)
+        self.favourites_filter_toggle.set_tooltip_text("Show only favourite tickers")
+        self.favourites_filter_toggle.connect("toggled", self.on_favourites_filter_toggled)
+        left_box.append(self.favourites_filter_toggle)
+
+        self._refresh_ticker_list()
+    def on_favourites_filter_toggled(self, button):
+        # Save the toggle state
+        state = self._load_ui_state()
+        state["favourites_filter_active"] = button.get_active()
+        self._save_ui_state(state)
+        self._refresh_ticker_list()
+
+    def _refresh_ticker_list(self, select_ticker=None):
+        """Rebuilds the ticker list, applying the favourites filter if enabled."""
+        row = self.ticker_list.get_first_child()
+        while row is not None:
+            next_row = row.get_next_sibling()
+            self.ticker_list.remove(row)
+            row = next_row
+
+        show_favourites_only = getattr(self, "favourites_filter_toggle", None) and self.favourites_filter_toggle.get_active()
+        if show_favourites_only:
+            tickers = [t for t in self.available_tickers if t in self.favourite_tickers]
+        else:
+            tickers = list(self.available_tickers)
+
+        for ticker in tickers:
             self._append_ticker_row(ticker)
+
+        if select_ticker:
+            self._select_ticker_in_list(select_ticker)
 
         right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         right_box.set_margin_top(10)
@@ -856,7 +891,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         if ticker not in self.available_tickers:
             self.available_tickers.append(ticker)
             self.available_tickers.sort()
-            self._rebuild_ticker_list(select_ticker=ticker)
+            self._refresh_ticker_list(select_ticker=ticker)
         else:
             self._select_ticker_in_list(ticker)
 
@@ -864,18 +899,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         self._load_ticker_data(ticker)
         self.result_label.set_text(f"Fetched and loaded {ticker} into training_data/{output_path.name}.")
 
-    def _rebuild_ticker_list(self, select_ticker=None):
-        row = self.ticker_list.get_first_child()
-        while row is not None:
-            next_row = row.get_next_sibling()
-            self.ticker_list.remove(row)
-            row = next_row
-
-        for ticker in self.available_tickers:
-            self._append_ticker_row(ticker)
-
-        if select_ticker:
-            self._select_ticker_in_list(select_ticker)
+    # _rebuild_ticker_list is replaced by _refresh_ticker_list
 
     def _select_ticker_in_list(self, ticker):
         row = self.ticker_list.get_first_child()
