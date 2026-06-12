@@ -20,9 +20,10 @@ from data_sources import fetch_tiingo_daily_prices, load_dip_labels, load_time_s
 
 APP_NAME = "Cronse"
 APP_TAGLINE = "Stock Dip Predictor"
-APP_TITLE = f"{APP_NAME} {APP_TAGLINE}"
+APP_TITLE = f"{APP_NAME}"
 APP_ID = "com.colin.cronse"
 APP_ICON_NAME = "cronse"
+APP_ICON_FILE = "conse.png"
 
 class AIChartWindow(Adw.ApplicationWindow):
     FALLBACK_CHART_WIDTH = 900
@@ -32,6 +33,7 @@ class AIChartWindow(Adw.ApplicationWindow):
 
     def __init__(self, application):
         super().__init__(application=application, title=APP_TITLE)
+        self.add_css_class("cronse-window")
         self.base_path = Path(__file__).parent
         self.model_path = self.base_path / "trained_model.pt"
         self.training_data_dir = self.base_path / "training_data"
@@ -191,6 +193,11 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.chart_hint_label.set_hexpand(True)
         chart_controls.append(self.chart_hint_label)
 
+        self.latest_price_label = Gtk.Label(label="Latest: --")
+        self.latest_price_label.set_xalign(1)
+        self.latest_price_label.add_css_class("latest-price-chip")
+        chart_controls.append(self.latest_price_label)
+
         self.chart_overlay = Gtk.Overlay()
         self.chart_overlay.set_hexpand(True)
         self.chart_overlay.set_vexpand(True)
@@ -247,8 +254,33 @@ class AIChartWindow(Adw.ApplicationWindow):
             return
 
         ticker = self._ticker_from_row(row)
-        if ticker:
-            self._load_ticker_data(ticker)
+        if not ticker:
+            return
+
+        data_path = self.training_data_dir / f"{ticker.lower()}.json"
+        needs_refresh = True
+        if data_path.exists():
+            try:
+                mtime = datetime.fromtimestamp(data_path.stat().st_mtime)
+                today = datetime.now().date()
+                if mtime.date() == today:
+                    needs_refresh = False
+            except Exception:
+                pass
+
+        if needs_refresh:
+            self.result_label.set_text(f"Fetching fresh data for {ticker}...")
+            try:
+                rows = fetch_tiingo_daily_prices(
+                    ticker,
+                    settings_path=self.base_path / "settings.json",
+                )
+                self.training_data_dir.mkdir(parents=True, exist_ok=True)
+                data_path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+            except Exception as exc:
+                self.result_label.set_text(f"Unable to fetch {ticker}: {exc}")
+                # Still try to load whatever is there
+        self._load_ticker_data(ticker)
 
     def on_add_ticker(self, widget):
         del widget
@@ -426,6 +458,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             self.model_analysis = None
             self.result_label.set_text(self.chart_error)
 
+        self._update_latest_price_label()
         self._render_chart_image()
 
     def _render_chart_image(self):
@@ -833,6 +866,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             self.chart_error = "No ticker files found in training_data."
             self.model_analysis = None
             self.result_label.set_text(self.chart_error)
+            self._update_latest_price_label()
             self._update_favourite_button()
             self._render_chart_image()
             return
@@ -851,6 +885,7 @@ class AIChartWindow(Adw.ApplicationWindow):
             self.chart_points = []
             self.chart_error = f"Unable to load {ticker}: {exc}"
             self.model_analysis = None
+            self._update_latest_price_label()
             self._update_favourite_button()
             self.result_label.set_text(self.chart_error)
             self._render_chart_image()
@@ -867,6 +902,17 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.update_chart_from_rows(rows)
         self._update_favourite_button()
         self.result_label.set_text(f"Loaded {ticker}. Hover the line for date/value. Right click a labeled date to remove it.")
+
+    def _update_latest_price_label(self):
+        if not hasattr(self, "latest_price_label"):
+            return
+
+        if not self.chart_points:
+            self.latest_price_label.set_text("Latest: --")
+            return
+
+        latest_date, latest_close = self.chart_points[-1]
+        self.latest_price_label.set_text(f"Latest: ${latest_close:.2f} ({str(latest_date)[:10]})")
 
     def _fetch_and_add_ticker(self, ticker):
         output_path = self.training_data_dir / f"{ticker.lower()}.json"
@@ -1109,11 +1155,30 @@ class AIChartWindow(Adw.ApplicationWindow):
     def _install_css(self):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(
-            b".card { background: linear-gradient(180deg, rgba(9, 18, 31, 0.94), rgba(10, 14, 24, 0.92)); border: 1px solid rgba(74, 222, 128, 0.08); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(125, 211, 252, 0.06); border-radius: 16px; }"
+            b".cronse-window { background: linear-gradient(180deg, #07111c 0%, #0a1726 55%, #091525 100%); color: #dbeafe; }"
+            b" .cronse-window toolbarview, .cronse-window headerbar { background: linear-gradient(180deg, rgba(7, 16, 28, 0.97), rgba(9, 21, 37, 0.95)); border-bottom: 1px solid rgba(56, 189, 248, 0.18); box-shadow: none; }"
+            b" .cronse-window headerbar label { color: #e2e8f0; }"
+            b" .cronse-window headerbar windowcontrols button { border: none; box-shadow: none; }"
+            b" .cronse-window headerbar windowcontrols button:hover { border: none; box-shadow: none; }"
+            b" .cronse-window headerbar windowcontrols button:active { border: none; box-shadow: none; }"
+            b" .cronse-window label { color: #dbeafe; }"
+            b" .cronse-window box, .cronse-window paned, .cronse-window scrolledwindow, .cronse-window viewport { background-color: transparent; }"
+            b" .cronse-window list { background: rgba(10, 20, 34, 0.86); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; }"
+            b" .cronse-window row { color: #dbeafe; border-radius: 10px; margin: 2px 4px; }"
+            b" .cronse-window row:hover { background: rgba(34, 211, 238, 0.08); }"
+            b" .cronse-window row:selected { background: linear-gradient(180deg, rgba(8, 58, 92, 0.8), rgba(8, 41, 70, 0.85)); }"
+            b" .cronse-window entry { background: rgba(8, 22, 36, 0.95); color: #e0f2fe; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 10px; padding: 6px 10px; }"
+            b" .cronse-window entry:focus { border-color: rgba(125, 211, 252, 0.95); box-shadow: 0 0 0 2px rgba(14, 116, 144, 0.35); }"
+            b" .cronse-window button, .cronse-window togglebutton { background: linear-gradient(180deg, rgba(10, 37, 58, 0.95), rgba(9, 28, 45, 0.95)); color: #e0f2fe; border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 10px; }"
+            b" .cronse-window button:hover, .cronse-window togglebutton:hover { background: linear-gradient(180deg, rgba(14, 53, 80, 0.95), rgba(10, 35, 56, 0.95)); }"
+            b" .cronse-window button:checked, .cronse-window togglebutton:checked { background: linear-gradient(180deg, rgba(12, 74, 110, 0.97), rgba(10, 57, 89, 0.97)); border-color: rgba(125, 211, 252, 0.95); color: #f0f9ff; }"
+            b" .cronse-window separator { color: rgba(56, 189, 248, 0.22); background-color: rgba(56, 189, 248, 0.22); }"
+            b" .card { background: linear-gradient(180deg, rgba(9, 18, 31, 0.94), rgba(10, 14, 24, 0.92)); border: 1px solid rgba(74, 222, 128, 0.08); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(125, 211, 252, 0.06); border-radius: 16px; }"
             b" .chart-container { background: linear-gradient(180deg, rgba(8, 17, 28, 0.98), rgba(10, 23, 38, 0.95)); border: 1px solid rgba(34, 211, 238, 0.18); border-radius: 18px; padding: 12px; box-shadow: inset 0 1px 0 rgba(103, 232, 249, 0.08), 0 18px 50px rgba(8, 15, 24, 0.45); }"
             b" .chart-hover-popover { background-color: rgba(9, 16, 28, 0.98); border: 1px solid rgba(103, 232, 249, 0.7); border-radius: 10px; padding: 7px 9px; box-shadow: 0 10px 30px rgba(34, 211, 238, 0.15); }"
             b" .chart-hover-date { color: #f5f3ff; font-weight: 700; }"
             b" .chart-hover-value { color: #67e8f9; }"
+            b" .latest-price-chip { color: #e0f2fe; font-weight: 700; background: rgba(12, 28, 44, 0.85); border: 1px solid rgba(103, 232, 249, 0.55); border-radius: 999px; padding: 4px 10px; }"
             b" .favourite-ticker-icon { color: #22c55e; }"
         )
         Gtk.StyleContext.add_provider_for_display(
@@ -1133,10 +1198,18 @@ class AIChartWindow(Adw.ApplicationWindow):
         Gtk.Window.set_default_icon_name(APP_ICON_NAME)
         self.set_icon_name(APP_ICON_NAME)
 
+    def _app_icon_path(self):
+        return self.base_path / "icons" / "hicolor" / "scalable" / "apps" / APP_ICON_FILE
+
     def _build_title_widget(self):
         title_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
 
-        icon = Gtk.Image.new_from_icon_name(APP_ICON_NAME)
+        icon_path = self._app_icon_path()
+        if icon_path.exists():
+            icon_texture = Gdk.Texture.new_from_filename(str(icon_path))
+            icon = Gtk.Image.new_from_paintable(icon_texture)
+        else:
+            icon = Gtk.Image.new_from_icon_name(APP_ICON_NAME)
         icon.set_pixel_size(24)
         title_box.append(icon)
 
