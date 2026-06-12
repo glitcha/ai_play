@@ -1,4 +1,5 @@
 import json
+import html
 import tempfile
 import urllib.parse
 import webbrowser
@@ -54,6 +55,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.favourite_tickers = self._load_favourite_tickers(window_state)
         self._updating_favourite_button = False
         self._restoring_paned_position = True
+        self.analysis_diff_by_ticker = {}
 
         # Restore favourites filter toggle state
         self._favourites_filter_active = window_state.get("favourites_filter_active", False)
@@ -112,12 +114,22 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.ticker_list.connect("row-selected", self.on_ticker_selected)
         ticker_scroll.set_child(self.ticker_list)
 
+        filter_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        left_box.append(filter_row)
+
         # Add favourites filter toggle
-        self.favourites_filter_toggle = Gtk.ToggleButton(label="Favourites only")
+        self.favourites_filter_toggle = Gtk.ToggleButton()
+        self.favourites_filter_toggle.set_icon_name("starred-symbolic")
         self.favourites_filter_toggle.set_active(self._favourites_filter_active)
         self.favourites_filter_toggle.set_tooltip_text("Show only favourite tickers")
         self.favourites_filter_toggle.connect("toggled", self.on_favourites_filter_toggled)
-        left_box.append(self.favourites_filter_toggle)
+        filter_row.append(self.favourites_filter_toggle)
+
+        self.analyse_button = Gtk.Button()
+        self.analyse_button.set_icon_name("applications-science-symbolic")
+        self.analyse_button.set_tooltip_text("Analyze listed tickers and color by projected move")
+        self.analyse_button.connect("clicked", self.on_analyse_clicked)
+        filter_row.append(self.analyse_button)
 
         self._refresh_ticker_list()
     def on_favourites_filter_toggled(self, button):
@@ -126,6 +138,101 @@ class AIChartWindow(Adw.ApplicationWindow):
         state["favourites_filter_active"] = button.get_active()
         self._save_ui_state(state)
         self._refresh_ticker_list()
+
+    def on_analyse_clicked(self, _button):
+        rows = []
+        index = 0
+        while True:
+            row = self.ticker_list.get_row_at_index(index)
+            if row is None:
+                break
+            rows.append(row)
+            index += 1
+
+        analyzed_count = 0
+        green_count = 0
+        orange_count = 0
+        listed_tickers = self._listed_tickers()
+        for ticker in listed_tickers:
+            self.analysis_diff_by_ticker.pop(ticker, None)
+
+        for row in rows:
+            ticker = self._ticker_from_row(row)
+
+            # Simulate actual top-to-bottom row clicks by selecting each row in order.
+            self.ticker_list.unselect_all()
+            self.ticker_list.select_row(row)
+            while GLib.MainContext.default().iteration(False):
+                pass
+
+            diff_pct = self._current_projection_percent()
+            if diff_pct is not None:
+                self.analysis_diff_by_ticker[ticker] = diff_pct
+                analyzed_count += 1
+                if diff_pct <= 5.0:
+                    green_count += 1
+                elif diff_pct <= 10.0:
+                    orange_count += 1
+
+            self._apply_ticker_analysis_style(row)
+
+        total_listed = len(rows)
+        self.result_label.set_text(
+            f"Analyse complete: {analyzed_count}/{total_listed} tickers analyzed. "
+            f"Green (<=5%): {green_count}, Orange (<=10%): {orange_count}."
+        )
+
+    def _listed_tickers(self):
+        tickers = []
+        row = self.ticker_list.get_first_child()
+        while row is not None:
+            ticker = self._ticker_from_row(row)
+            if ticker:
+                tickers.append(ticker)
+            row = row.get_next_sibling()
+        return tickers
+
+    def _current_projection_percent(self):
+        projected_dip = self.model_analysis.get("projected_dip") if self.model_analysis else None
+        if not projected_dip:
+            return None
+
+        if not self.chart_points:
+            return None
+
+        latest_close = float(self.chart_points[-1][1])
+        if latest_close <= 0:
+            return None
+
+        try:
+            target_price = float(projected_dip["target_price"])
+        except (KeyError, TypeError, ValueError):
+            return None
+
+        return abs(target_price - latest_close) / latest_close * 100.0
+
+    def _apply_ticker_analysis_style(self, row):
+        label = getattr(row, "ticker_label", None)
+        ticker = self._ticker_from_row(row)
+        if label is None or not ticker:
+            return
+
+        label.remove_css_class("ticker-analysis-green")
+        label.remove_css_class("ticker-analysis-orange")
+
+        diff_pct = self.analysis_diff_by_ticker.get(ticker)
+        escaped_ticker = html.escape(ticker)
+        if diff_pct is None:
+            label.set_text(ticker)
+            return
+        if diff_pct <= 5.0:
+            label.add_css_class("ticker-analysis-green")
+            label.set_markup(f"<span foreground='#4ade80' weight='bold'>{escaped_ticker}</span>")
+        elif diff_pct <= 10.0:
+            label.add_css_class("ticker-analysis-orange")
+            label.set_markup(f"<span foreground='#fb923c' weight='bold'>{escaped_ticker}</span>")
+        else:
+            label.set_text(ticker)
 
     def _refresh_ticker_list(self, select_ticker=None):
         """Rebuilds the ticker list, applying the favourites filter if enabled."""
@@ -281,6 +388,13 @@ class AIChartWindow(Adw.ApplicationWindow):
                 self.result_label.set_text(f"Unable to fetch {ticker}: {exc}")
                 # Still try to load whatever is there
         self._load_ticker_data(ticker)
+
+        diff_pct = self._current_projection_percent()
+        if diff_pct is None:
+            self.analysis_diff_by_ticker.pop(ticker, None)
+        else:
+            self.analysis_diff_by_ticker[ticker] = diff_pct
+        self._apply_ticker_analysis_style(row)
 
     def on_add_ticker(self, widget):
         del widget
@@ -855,7 +969,9 @@ class AIChartWindow(Adw.ApplicationWindow):
 
         label = Gtk.Label(label=ticker, xalign=0)
         label.set_hexpand(True)
+        row.ticker_label = label
         row_box.append(label)
+        self._apply_ticker_analysis_style(row)
 
         row.set_child(row_box)
         self.ticker_list.append(row)
@@ -908,11 +1024,12 @@ class AIChartWindow(Adw.ApplicationWindow):
             return
 
         if not self.chart_points:
-            self.latest_price_label.set_text("Latest: --")
+            self.latest_price_label.set_markup("<span foreground='#c084fc' weight='bold'>Latest: --</span>")
             return
 
         latest_date, latest_close = self.chart_points[-1]
-        self.latest_price_label.set_text(f"Latest: ${latest_close:.2f} ({str(latest_date)[:10]})")
+        latest_text = f"Latest: ${latest_close:.2f} ({str(latest_date)[:10]})"
+        self.latest_price_label.set_markup(f"<span foreground='#c084fc' weight='bold'>{html.escape(latest_text)}</span>")
 
     def _fetch_and_add_ticker(self, ticker):
         output_path = self.training_data_dir / f"{ticker.lower()}.json"
@@ -1178,8 +1295,10 @@ class AIChartWindow(Adw.ApplicationWindow):
             b" .chart-hover-popover { background-color: rgba(9, 16, 28, 0.98); border: 1px solid rgba(103, 232, 249, 0.7); border-radius: 10px; padding: 7px 9px; box-shadow: 0 10px 30px rgba(34, 211, 238, 0.15); }"
             b" .chart-hover-date { color: #f5f3ff; font-weight: 700; }"
             b" .chart-hover-value { color: #67e8f9; }"
-            b" .latest-price-chip { color: #e0f2fe; font-weight: 700; background: rgba(12, 28, 44, 0.85); border: 1px solid rgba(103, 232, 249, 0.55); border-radius: 999px; padding: 4px 10px; }"
+            b" .latest-price-chip { color: #c084fc; font-weight: 700; background: rgba(76, 29, 149, 0.24); border: 1px solid rgba(196, 181, 253, 0.72); border-radius: 999px; padding: 4px 10px; }"
             b" .favourite-ticker-icon { color: #22c55e; }"
+            b" .ticker-analysis-orange { color: #fb923c; font-weight: 700; }"
+            b" .ticker-analysis-green { color: #4ade80; font-weight: 700; }"
         )
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
