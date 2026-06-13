@@ -1,3 +1,4 @@
 settings.json
 training_data/*.json
 trained_model.pt
+__pycache__/*.pyc

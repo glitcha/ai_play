@@ -1,5 +1,6 @@
 import json
 import html
+import sys
 import tempfile
 import urllib.parse
 import webbrowser
@@ -132,6 +133,16 @@ class AIChartWindow(Adw.ApplicationWindow):
         filter_row.append(self.analyse_button)
 
         self._refresh_ticker_list()
+        self._build_chart_panel()
+
+        GLib.idle_add(self._restore_paned_position)
+        GLib.idle_add(self._rerender_chart_after_layout)
+        self.paned.connect("notify::position", self.on_paned_position_changed)
+        self.connect("close-request", self.on_close_request)
+
+        self._update_favourite_button()
+        self._select_initial_ticker()
+
     def on_favourites_filter_toggled(self, button):
         # Save the toggle state
         state = self._load_ui_state()
@@ -254,6 +265,7 @@ class AIChartWindow(Adw.ApplicationWindow):
         if select_ticker:
             self._select_ticker_in_list(select_ticker)
 
+    def _build_chart_panel(self):
         right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         right_box.set_margin_top(10)
         right_box.set_margin_bottom(10)
@@ -346,14 +358,6 @@ class AIChartWindow(Adw.ApplicationWindow):
         self.result_label.set_xalign(0)
         self.result_label.set_wrap(True)
         right_box.append(self.result_label)
-
-        GLib.idle_add(self._restore_paned_position)
-        GLib.idle_add(self._rerender_chart_after_layout)
-        self.paned.connect("notify::position", self.on_paned_position_changed)
-        self.connect("close-request", self.on_close_request)
-
-        self._update_favourite_button()
-        self._select_initial_ticker()
 
     def on_ticker_selected(self, list_box, row):
         del list_box
@@ -1350,3 +1354,12 @@ class AIChartApp(Adw.Application):
         if window is None:
             window = AIChartWindow(self)
         window.present()
+
+
+def main():
+    app = AIChartApp()
+    return app.run(sys.argv)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
