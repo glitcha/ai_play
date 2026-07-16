@@ -225,6 +225,9 @@ class AIChartWindow(Adw.ApplicationWindow):
         except (KeyError, TypeError, ValueError):
             return None
 
+        if latest_close <= target_price:
+            return 0.0
+
         return abs(target_price - latest_close) / latest_close * 100.0
 
     def _apply_ticker_analysis_style(self, row):
