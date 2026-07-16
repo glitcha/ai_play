@@ -13,8 +13,10 @@ gi.require_version('Gdk', '4.0')
 gi.require_version('Gtk', '4.0')
 import matplotlib
 matplotlib.use("Agg")
+matplotlib.rcParams["text.antialiased"] = False
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
+from matplotlib.ticker import MaxNLocator
 from gi.repository import Adw, Gdk, GLib, GObject, Gtk
 
 from aichart import AIChart
@@ -30,8 +32,11 @@ APP_ICON_FILE = "conse.png"
 class AIChartWindow(Adw.ApplicationWindow):
     FALLBACK_CHART_WIDTH = 900
     FALLBACK_CHART_HEIGHT = 560
-    RENDER_DPI = 220
-    RENDER_SCALE_MULTIPLIER = 2
+    RENDER_DPI = 100
+    RENDER_SCALE_MULTIPLIER = 1
+    MAX_RENDER_WIDTH = 1800
+    MAX_RENDER_HEIGHT = 1100
+    MAX_PROJECTED_BARS_FOR_PLOT = 60
 
     def __init__(self, application):
         super().__init__(application=application, title=APP_TITLE)
@@ -581,19 +586,53 @@ class AIChartWindow(Adw.ApplicationWindow):
 
     def _render_chart_image(self):
         chart_width, chart_height = self._chart_pixel_size()
-        figure = self._build_chart_figure(chart_width, chart_height)
+        try:
+            figure = self._build_chart_figure(chart_width, chart_height)
+            render_dpi = self.RENDER_DPI
+        except RuntimeError as exc:
+            if not self._is_font_raster_overflow(exc):
+                raise
+
+            # Preserve labels while lowering raster pressure in Python 3.14 freetype path.
+            previous_text_antialias = matplotlib.rcParams.get("text.antialiased", True)
+            matplotlib.rcParams["text.antialiased"] = False
+            try:
+                figure = self._build_chart_figure(
+                    min(chart_width, 1300),
+                    min(chart_height, 800),
+                    render_dpi=72,
+                    x_label_rotation=0,
+                    tick_label_size=6,
+                    title_size=10,
+                    max_labels=4,
+                )
+                render_dpi = 72
+            finally:
+                matplotlib.rcParams["text.antialiased"] = previous_text_antialias
+
         figure.savefig(
             self.chart_image_path,
             facecolor=figure.get_facecolor(),
             format="png",
-            dpi=self.RENDER_DPI,
+            dpi=render_dpi,
         )
         self.chart_picture.set_filename(str(self.chart_image_path))
 
-    def _build_chart_figure(self, chart_width, chart_height):
+    def _build_chart_figure(
+        self,
+        chart_width,
+        chart_height,
+        render_dpi=None,
+        x_label_rotation=45,
+        tick_label_size=8,
+        title_size=13,
+        max_labels=8,
+    ):
+        if render_dpi is None:
+            render_dpi = self.RENDER_DPI
         figure = Figure(
-            figsize=(chart_width / self.RENDER_DPI, chart_height / self.RENDER_DPI),
-            dpi=self.RENDER_DPI,
+            figsize=(chart_width / render_dpi, chart_height / render_dpi),
+            dpi=render_dpi,
         )
         axis = figure.subplots()
         self.chart_render_info = None
@@ -630,14 +669,15 @@ class AIChartWindow(Adw.ApplicationWindow):
             axis.plot(x_values, values, color="#7dd3fc", linewidth=1.8, solid_capstyle="round", zorder=4)
             axis.scatter([x_values[-1]], [values[-1]], s=44, color="#67e8f9", edgecolors="#ecfeff", linewidths=0.8, zorder=7)
 
-            axis.tick_params(axis="x", colors="#c7d2fe", labelrotation=45, labelsize=8)
-            axis.tick_params(axis="y", colors="#dbeafe", labelsize=8)
+            axis.tick_params(axis="x", colors="#c7d2fe", labelrotation=x_label_rotation, labelsize=tick_label_size)
+            axis.tick_params(axis="y", colors="#dbeafe", labelsize=tick_label_size)
+            axis.yaxis.set_major_locator(MaxNLocator(6))
             axis.spines["bottom"].set_color("#28445f")
             axis.spines["left"].set_color("#28445f")
             axis.spines["top"].set_visible(False)
             axis.spines["right"].set_visible(False)
             axis.grid(color="#38bdf8", linestyle=":", linewidth=0.7, alpha=0.18)
-            axis.set_title(self.current_ticker or "Daily Close", color="#f8fafc", fontsize=13, fontweight="bold", pad=10)
+            axis.set_title(self.current_ticker or "Daily Close", color="#f8fafc", fontsize=title_size, fontweight="bold", pad=10)
             axis.set_ylim(baseline, max_value + (value_range * 0.1))
 
             labeled_indices = self._labeled_dip_indices(labels)
@@ -717,9 +757,10 @@ class AIChartWindow(Adw.ApplicationWindow):
 
             projected_dip = self.model_analysis.get("projected_dip") if self.model_analysis else None
             if projected_dip:
-                projected_x = x_values[-1] + projected_dip["bars_ahead"]
+                projected_bars = self._clamped_projected_bars(projected_dip.get("bars_ahead", 0))
+                projected_x = x_values[-1] + projected_bars
                 projected_y = projected_dip["target_price"]
-                projected_label = self._projected_label(labels[-1], projected_dip["bars_ahead"], projected_y)
+                projected_label = self._projected_label(labels[-1], projected_bars, projected_y)
 
                 axis.plot(
                     [x_values[-1], projected_x],
@@ -760,7 +801,6 @@ class AIChartWindow(Adw.ApplicationWindow):
             #     bbox={"boxstyle": "round,pad=0.22", "fc": "#08131f", "ec": "#164e63", "alpha": 0.92},
             # )
 
-            max_labels = 8
             if len(labels) > max_labels:
                 step = max(1, len(labels) // max_labels)
                 visible_positions = list(range(0, len(labels), step))
@@ -769,9 +809,10 @@ class AIChartWindow(Adw.ApplicationWindow):
 
             visible_labels = [labels[index] for index in visible_positions]
             if projected_dip:
-                projected_x = x_values[-1] + projected_dip["bars_ahead"]
+                projected_bars = self._clamped_projected_bars(projected_dip.get("bars_ahead", 0))
+                projected_x = x_values[-1] + projected_bars
                 visible_positions.append(projected_x)
-                visible_labels.append(self._projected_tick_label(labels[-1], projected_dip["bars_ahead"]))
+                visible_labels.append(self._projected_tick_label(labels[-1], projected_bars))
 
             axis.set_xticks(visible_positions)
             axis.set_xticklabels(visible_labels, ha="right")
@@ -808,10 +849,24 @@ class AIChartWindow(Adw.ApplicationWindow):
             height = max(self.get_height() - 140, self.FALLBACK_CHART_HEIGHT)
 
         render_scale = scale_factor * self.RENDER_SCALE_MULTIPLIER
-        return max(width * render_scale, self.FALLBACK_CHART_WIDTH), max(
-            height * render_scale,
-            self.FALLBACK_CHART_HEIGHT,
+        render_width = max(width * render_scale, self.FALLBACK_CHART_WIDTH)
+        render_height = max(height * render_scale, self.FALLBACK_CHART_HEIGHT)
+
+        return int(min(render_width, self.MAX_RENDER_WIDTH)), int(
+            min(render_height, self.MAX_RENDER_HEIGHT)
         )
+
+    def _is_font_raster_overflow(self, error):
+        message = str(error)
+        return "FT_Render_Glyph" in message or "raster overflow" in message
+
+    def _clamped_projected_bars(self, bars_ahead):
+        try:
+            bars = int(bars_ahead)
+        except (TypeError, ValueError):
+            return 1
+
+        return max(1, min(bars, self.MAX_PROJECTED_BARS_FOR_PLOT))
 
     def _rerender_chart_after_layout(self):
         if self.chart_points or self.chart_error:

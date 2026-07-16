@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ml_env/bin/python main.py --retrain
